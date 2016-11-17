@@ -32,7 +32,7 @@ def data_reduction(imageFullname, d_in_pixel, Rot, tilt, lamda, x0, y0, PP):
     chi = chi+90
 
     Qlist, IntAve = p.integrate1d(imArray, 1000, mask = detector_mask, polarization_factor = PP)
-    IntAve = savgol_filter(IntAve, 5, 2)
+    IntAve = savgol_filter(IntAve, 15, 2)
     Qlist = Qlist * 10e8
 
 
