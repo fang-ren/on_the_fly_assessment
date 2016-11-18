@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 path = 'C:\\Research_FangRen\\Publications\\on_the_fly_paper\\Sample_data\\'
 
-file2 = path + 'noisy.csv'
+file2 = path + 'good_2.csv'
 file1 = path + 'amorphous.csv'
-file3 = path + 'noisy_2.csv'
+file3 = path + 'noisy.csv'
 
 filter_window = 15
 

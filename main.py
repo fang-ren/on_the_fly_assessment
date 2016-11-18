@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Nov 17 2016
+
+@author: Fang Ren
+"""
 
 import imp
 run = imp.load_source("on_the_fly", "on_the_fly.py")

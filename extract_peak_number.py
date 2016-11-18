@@ -5,21 +5,16 @@ Created on Wed Aug 03 15:00:51 2016
 @author: fangren
 """
 
-import imp
-peakdet = imp.load_source("peakdet", "peak_detection.py")
+from scipy.signal import find_peaks_cwt
+import numpy as np
 
-def extract_peak_num(Qlist, IntAve, criterion, index):
+
+def extract_peak_num(Qlist, IntAve, index, a1 = 1, a2 = 30):
     """
     extract the peak numbers from 1D spectra
     """
-    maxtab, mintab = peakdet.peakdet(IntAve, criterion)
-    if len(maxtab) > 0:
-        peaks = maxtab[:,0].astype(int)
-        if Qlist[peaks[0]] < 1:
-            peaks = peaks[1:]
-        if peaks[-1] > 930:
-            peaks = peaks[:-1]
-    else: 
-        peaks = []
+    peaks = find_peaks_cwt(IntAve, np.arange(a1, a2, 0.05))
+    peaks = peaks[1:-1]
+
     newRow = [index, len(peaks)]
     return newRow, peaks

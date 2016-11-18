@@ -88,7 +88,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                 # extract composition information if the information is available
 
                 # extract the number of peaks in 1D spectra as feature 3
-                newRow3, peaks = peak_num.extract_peak_num(Qlist, IntAve, 10, index)
+                newRow3, peaks = peak_num.extract_peak_num(Qlist, IntAve, index)
                 attribute3.append(newRow3)
                 # extract neighbor distances as feature4
                 newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename, num_of_smpls_on_wafer)
