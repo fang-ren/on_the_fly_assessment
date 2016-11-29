@@ -14,7 +14,7 @@ import random
 
 
 # import modules
-reduction = imp.load_source("data_reduction", "data_reduction.py")
+reduction = imp.load_source("data_reduction", "data_reduction_smooth.py")
 Qchi = imp.load_source("save_Qchi", "save_Qchi.py")
 oneDplot = imp.load_source("save_1Dplot", "save_1Dplot.py")
 oneDcsv = imp.load_source("save_1Dcsv", "save_1Dcsv.py")
@@ -48,7 +48,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
     tilt = tilt_angle / (2 * np.pi) * 360  # detector tilt  # wavelength
 
     # generate a folder to put processed files
-    save_path = folder_path + 'Processed\\'
+    save_path = folder_path + 'Processed_zinger_2\\'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
