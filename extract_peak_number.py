@@ -9,7 +9,7 @@ from scipy.signal import find_peaks_cwt, general_gaussian, fftconvolve
 import numpy as np
 
 
-def extract_peak_num(Qlist, IntAve, index, a1 = 10, a2 = 30):
+def extract_peak_num(Qlist, IntAve, index, a1 = 1, a2 = 20):
     """
     extract the peak numbers from 1D spectra
     """

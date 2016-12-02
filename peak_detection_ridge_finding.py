@@ -30,8 +30,8 @@ for file in glob.glob(os.path.join(path, '*.csv')):
 
         widths = np.arange(1, 64, 2)
         cwt_coefficient = cwt(IntAve, ricker, widths)
-        a1 = 10
-        a2 = 30
+        a1 = 1
+        a2 = 20
         peaks = find_peaks_cwt(IntAve, np.arange(a1, a2, 0.05))
         peaks = peaks[1:-1]
 
