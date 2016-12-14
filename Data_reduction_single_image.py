@@ -13,7 +13,7 @@ import numpy as np
 
 # open MARCCD tiff image
 path = 'C:\\Research_FangRen\\Publications\\on_the_fly_paper\\Sample_data\\'
-im = Image.open(path + 'textured.tif')
+im = Image.open(path + 'LaB6.tif')
 # change image object into an array
 imArray = np.array(im)
 s = int(imArray.shape[0])
@@ -41,47 +41,47 @@ cake,Q,chi = p.integrate2d(imArray,1000, 1000, mask = detector_mask, polarizatio
 Q = Q * 10e8
 chi = chi+90
 
-# generate a tiff image
-X = [i+1 for i in range(s)]
-Y = [i+1 for i in range(s)]
-X, Y = np.meshgrid(X, Y)
-plt.figure(1, (4,4))
-plt.pcolormesh(X, Y, imArray)
-plt.clim(0, 2000)
-plt.ylim((0, s))
-plt.xlim((0, s))
-plt.savefig(path+ 'image', dpi = 600)
-
-# # generate a vertical Q-chi image with polar correction
-# Q, chi = np.meshgrid(Q, chi)
-# plt.figure(2, (5,4))
-# # plt.title('Q-$\Psi$')
-# plt.pcolormesh(chi, Q, cake)
-# #plt.imshow(cake)
-# plt.xlabel('$\Psi$')
-# plt.ylabel('Q')
-# plt.ylim((0.5, 6))
-# plt.xlim((-58, 63))
-# plt.colorbar()
+# # generate a tiff image
+# X = [i+1 for i in range(s)]
+# Y = [i+1 for i in range(s)]
+# X, Y = np.meshgrid(X, Y)
+# plt.figure(1, (4,4))
+# plt.pcolormesh(X, Y, imArray)
 # plt.clim(0, 2000)
-# plt.tight_layout()
-# plt.savefig(path+ 'Qpsi', dpi = 600)
+# plt.ylim((0, s))
+# plt.xlim((0, s))
+# plt.savefig(path+ 'image', dpi = 600)
 
-
-# generate a Q-chi image with polar correction
+# generate a vertical Q-gamma image with polar correction
 Q, chi = np.meshgrid(Q, chi)
 plt.figure(2, (5,4))
 # plt.title('Q-$\Psi$')
-plt.pcolormesh(Q, chi, cake)
+plt.pcolormesh(chi, Q, cake)
 #plt.imshow(cake)
-plt.ylabel('$\Psi$')
-plt.xlabel('Q')
-plt.xlim((0.5, 6))
-plt.ylim((-58, 63))
+plt.xlabel('$\gamma$')
+plt.ylabel('Q')
+plt.ylim((0.5, 6))
+plt.xlim((-58, 63))
 plt.colorbar()
-plt.clim(0, 9000)
+plt.clim(0, 2000)
 plt.tight_layout()
 plt.savefig(path+ 'Qpsi', dpi = 600)
+
+
+# # generate a Q-gamma image with polar correction
+# Q, chi = np.meshgrid(Q, chi)
+# plt.figure(2, (5,4))
+# # plt.title('Q-$\Psi$')
+# plt.pcolormesh(Q, chi, cake)
+# #plt.imshow(cake)
+# plt.ylabel('$\gamma$')
+# plt.xlabel('Q')
+# plt.xlim((0.5, 6))
+# plt.ylim((-58, 63))
+# plt.colorbar()
+# plt.clim(0, 9000)
+# plt.tight_layout()
+# plt.savefig(path+ 'Qpsi', dpi = 600)
 
 
 # # generate a vertical column average image
@@ -97,17 +97,17 @@ plt.savefig(path+ 'Qpsi', dpi = 600)
 # plt.savefig(path+ '1D', dpi = 600)
 
 
-# generate a column average image
-plt.figure(3, (5,4))
-# plt.title('Column sum')
-Qlist, IntAve = p.integrate1d(imArray, 1000, mask = detector_mask, polarization_factor = PP)
-Qlist = Qlist * 10e8
-plt.plot(Qlist, IntAve)
-plt.ylabel('Intensity')
-plt.xlabel('Q')
-plt.xlim((0.6, 5.87))
-plt.tight_layout()
-plt.savefig(path+ '1D', dpi = 600)
+# # generate a column average image
+# plt.figure(3, (5,4))
+# # plt.title('Column sum')
+# Qlist, IntAve = p.integrate1d(imArray, 1000, mask = detector_mask, polarization_factor = PP)
+# Qlist = Qlist * 10e8
+# plt.plot(Qlist, IntAve)
+# plt.ylabel('Intensity')
+# plt.xlabel('Q')
+# plt.xlim((0.6, 5.87))
+# plt.tight_layout()
+# plt.savefig(path+ '1D', dpi = 600)
 
 #
 # twoTheta = np.arcsin(Qlist*1.54/4/np.pi) *2 *180/np.pi
@@ -126,30 +126,30 @@ plt.savefig(path+ '1D', dpi = 600)
 # #######################################################
 #
 
-# generate a texture image
-plt.figure(4, (5,4))
-# plt.title('texture')
-
-keep = np.where(cake != 0)
-chi = chi*np.pi/180
-
-IntSum = np.bincount((Q[keep].ravel()*100).astype(int), cake[keep].ravel().astype(int))
-count = np.bincount((Q[keep].ravel()*100).astype(int), np.ones((s,s))[keep].ravel().astype(int))
-IntAve = list(np.array(IntSum)/np.array(count))
-
-textureSum = np.bincount((Q[keep].ravel()*100).astype(int), (cake[keep]*np.cos(chi[keep])).ravel())
-chiCount = np.bincount((Q[keep].ravel()*100).astype(int), (np.cos(chi[keep])).ravel())
-
-texture = list(np.array(textureSum)/np.array(IntAve)/np.array(chiCount)-1)
-
-step = 0.01
-Qlen = len(textureSum)
-Qlist_texture = [i*step for i in range(Qlen)]
-
-
-plt.plot(Qlist_texture, texture)
-plt.xlabel('Q')
-plt.ylabel('Texture')
-plt.xlim((0.6, 5.87))
-plt.tight_layout()
-plt.savefig(path+ 'texture', dpi = 600)
+# # generate a texture image
+# plt.figure(4, (5,4))
+# # plt.title('texture')
+#
+# keep = np.where(cake != 0)
+# chi = chi*np.pi/180
+#
+# IntSum = np.bincount((Q[keep].ravel()*100).astype(int), cake[keep].ravel().astype(int))
+# count = np.bincount((Q[keep].ravel()*100).astype(int), np.ones((s,s))[keep].ravel().astype(int))
+# IntAve = list(np.array(IntSum)/np.array(count))
+#
+# textureSum = np.bincount((Q[keep].ravel()*100).astype(int), (cake[keep]*np.cos(chi[keep])).ravel())
+# chiCount = np.bincount((Q[keep].ravel()*100).astype(int), (np.cos(chi[keep])).ravel())
+#
+# texture = list(np.array(textureSum)/np.array(IntAve)/np.array(chiCount)-1)
+#
+# step = 0.01
+# Qlen = len(textureSum)
+# Qlist_texture = [i*step for i in range(Qlen)]
+#
+#
+# plt.plot(Qlist_texture, texture)
+# plt.xlabel('Q')
+# plt.ylabel('Texture')
+# plt.xlim((0.6, 5.87))
+# plt.tight_layout()
+# plt.savefig(path+ 'texture', dpi = 600)
