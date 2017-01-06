@@ -10,7 +10,6 @@ import pyFAI
 from PIL import Image
 import numpy as np
 from scipy import signal
-from scipy.signal import savgol_filter
 
 def data_reduction(imageFullname, d_in_pixel, Rot, tilt, lamda, x0, y0, PP):
     # open MARCCD tiff image

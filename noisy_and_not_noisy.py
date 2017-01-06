@@ -16,7 +16,7 @@ data1 = np.genfromtxt(file1, delimiter = ',')
 Qlist1 = data1[196:550,0]
 IntAve1 = data1[196:550,1]
 IntAve_smoothed1 = savgol_filter(IntAve1, filter_window, 2)
-noise1 = IntAve1 - IntAve_smoothed1
+noise1 = IntAve1 - IntAvesmoothed1
 
 data2 = np.genfromtxt(file2, delimiter = ',')
 Qlist2 = data2[170:500,0]
