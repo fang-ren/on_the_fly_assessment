@@ -48,7 +48,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
     tilt = tilt_angle / (2 * np.pi) * 360  # detector tilt  # wavelength
 
     # generate a folder to put processed files
-    save_path = os.path.join(folder_path, 'Processed_zinger_2\\')
+    save_path = os.path.join(folder_path, 'Processed\\')
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
