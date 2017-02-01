@@ -37,8 +37,8 @@ d = d_in_pixel*pixelsize*0.001  # measured in milimeters
 
 p = pyFAI.AzimuthalIntegrator(wavelength=lamda)
 p.setFit2D(d,x0,y0,tilt,Rot,pixelsize,pixelsize)
-cake,Q,chi = p.integrate2d(imArray,1000, 1000, mask = detector_mask, polarization_factor = PP)
-Q = Q * 10e8
+cake,Q,chi = p.integrate2d(imArray,1000, 1000, unit='2th_deg', mask = detector_mask, polarization_factor = PP)
+# Q = Q * 10e8
 chi = chi+90
 
 # # generate a tiff image
@@ -60,12 +60,12 @@ plt.pcolormesh(chi, Q, cake)
 #plt.imshow(cake)
 plt.xlabel('$\gamma$')
 plt.ylabel('Q')
-plt.ylim((0.5, 6))
-plt.xlim((-58, 63))
+# plt.ylim((0.5, 6))
+# plt.xlim((-58, 63))
 plt.colorbar()
 plt.clim(0, 2000)
 plt.tight_layout()
-plt.savefig(path+ 'Qpsi', dpi = 600)
+# plt.savefig(path+ 'Qpsi', dpi = 600)
 
 
 # # generate a Q-gamma image with polar correction

@@ -48,7 +48,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
     tilt = tilt_angle / (2 * np.pi) * 360  # detector tilt  # wavelength
 
     # generate a folder to put processed files
-    save_path = folder_path + 'Processed_zinger_2\\'
+    save_path = os.path.join(folder_path, 'Processed_zinger_2\\')
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -57,7 +57,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
 
     while (index <= last_scan):
         imageFilename = base_filename+ file_index(index) + '.tif'
-        imageFullname = folder_path + imageFilename        
+        imageFullname = os.path.join(folder_path, imageFilename)
         print("\r")    
         # wait until an image is created, and process the previous image, to avoid crashing
         print 'waiting for image', imageFullname+' to be created...'

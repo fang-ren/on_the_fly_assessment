@@ -37,12 +37,13 @@ def twoD_visualize(path):
             metal3 = data[:,56]
             peak_num = data[:,55]
             neighbor_distance = data[:,57]
+            SNR = data[:,58]
 #    return plate_x, plate_y, ROI1, ROI2, ROI3, ROI5, crystallinity, texture, metal1, metal2, metal3, peak_position, peak_width, peak_intensity
-    return plate_x, plate_y, ROI1, ROI2, ROI3, ROI5, crystallinity, texture, metal1, metal2, metal3, peak_num, neighbor_distance
+    return plate_x, plate_y, ROI1, ROI2, ROI3, ROI5, crystallinity, texture, metal1, metal2, metal3, peak_num, neighbor_distance, SNR
     # return plate_x, plate_y, ROI1, ROI2, ROI3, ROI5
            
 
-plate_x, plate_y, ROI1, ROI2, ROI3, ROI5, crystallinity, texture, metal1, metal2, metal3, peak_num, neighbor_distance = twoD_visualize(path)
+plate_x, plate_y, ROI1, ROI2, ROI3, ROI5, crystallinity, texture, metal1, metal2, metal3, peak_num, neighbor_distance, SNR = twoD_visualize(path)
 # plate_x, plate_y, ROI1, ROI2, ROI3, ROI5= twoD_visualize(path)
 
 area = [125]
@@ -94,13 +95,13 @@ plt.savefig(path+'peak_num', dpi = 600)
 #
 #
 
-# plt.figure(5, figsize = (6, 4.5))
-# plt.scatter(plate_y, plate_x, c = ROI5, s = area, marker = 's')
-# plt.xlim((-44, 44))
-# plt.ylim((-44, 44))
-# plt.colorbar()
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.clim((6505, 111194))
-# plt.savefig(path+'ROI5', dpi = 600)
+plt.figure(7, figsize = (6, 4.5))
+plt.scatter(plate_y, plate_x, c = 10*np.log(SNR), s = area, marker = 's')
+plt.xlim((-36, 36))
+plt.ylim((-36, 36))
+plt.colorbar()
+plt.xlabel('x')
+plt.ylabel('y')
+plt.clim(150, 156)
+plt.savefig(path+'SNR_2', dpi = 600)
 
