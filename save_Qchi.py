@@ -9,6 +9,7 @@ Created on Mon Jun 13
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
+import os.path
 
 def save_Qchi(Q, chi, cake, imageFilename, save_path):
     Q, chi = np.meshgrid(Q, chi)
@@ -25,7 +26,7 @@ def save_Qchi(Q, chi, cake, imageFilename, save_path):
     plt.clim(scipy.stats.scoreatpercentile(np.log(cake[inds]), 5),
              scipy.stats.scoreatpercentile(np.log(cake[inds]), 95))
     plt.colorbar()
-    plt.savefig(save_path + imageFilename[:-4]+'_Qchi')
+    plt.savefig(os.path.join(save_path, imageFilename[:-4]+'_Qchi'))
     
     plt.close()
 

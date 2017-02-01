@@ -7,6 +7,7 @@ Created on Mon Jun 13 21:18:45 2016
 
 import numpy as np
 import matplotlib.pyplot as plt
+import os.path
 
 def save_texture_plot_csv(Q, chi, cake, imageFilename, save_path):
     Q, chi = np.meshgrid(Q, chi)
@@ -35,10 +36,10 @@ def save_texture_plot_csv(Q, chi, cake, imageFilename, save_path):
     plt.xlabel('Q')
     plt.ylabel('Texture')
     plt.xlim((0.7, 6.4))
-    plt.savefig(save_path + imageFilename[:-4] + '_texture')
+    plt.savefig(os.path.join(save_path, imageFilename[:-4] + '_texture'))
     plt.close()
     
     data = np.concatenate(([Qlist_texture], [texture]))
-    np.savetxt(save_path + imageFilename[:-4]+'_texture.csv', data.T, delimiter=',')
+    np.savetxt(os.path.join(save_path, imageFilename[:-4]+'_texture.csv'), data.T, delimiter=',')
 
     return Qlist_texture, texture

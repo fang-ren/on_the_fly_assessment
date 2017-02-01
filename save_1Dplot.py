@@ -7,6 +7,7 @@ Created on Mon Jun 13
 """
 
 import matplotlib.pyplot as plt
+import os.path
 
 
 def save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path):
@@ -19,6 +20,6 @@ def save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path):
     plt.ylabel('Intensity')
     plt.xlim((0.7, 6.4))
 
-    plt.savefig(save_path + imageFilename[:-4]+'_1D')
+    plt.savefig(os.path.join(save_path, imageFilename[:-4]+'_1D'))
     
     plt.close()
