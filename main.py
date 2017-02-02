@@ -22,6 +22,6 @@ folder_path = 'C:\Research_FangRen\Data\Apr2016\Jae_samples\silicon'
 base_filename = 'silicon_30s_t2_'
 index = 1   # starting from this scan#
 last_scan = 441  # end with this scan#
-num_of_smpls_on_wafer = 25
+num_of_smpls_on_wafer = 25 # the number of samples in one row
 
 run.on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda, x0, y0, PP, num_of_smpls_on_wafer)
