@@ -7,13 +7,14 @@ Created on Thu Apr 21 14:48:10 2016
 
 import numpy as np
 from numpy import genfromtxt
+import os.path
 
 def add_feature_to_master(feature, base_filename, folder_path, save_path, master_index):
     """
     add a feature 'feature' to master meta data, feature is in the form of a ziped row
     """
     feature = np.array(feature)
-    master_file = folder_path + base_filename +'scan1.csv'
+    master_file = os.path.join(folder_path, base_filename +'scan1.csv')
     master_data = genfromtxt(master_file, delimiter=',', skip_header = 1)
     master_data = np.nan_to_num(master_data)
     dimension = np.min((master_data.shape[0], feature.shape[0]))
