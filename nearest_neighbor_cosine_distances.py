@@ -8,6 +8,7 @@ Created on Wed Aug 03 14:03:38 2016
 import numpy as np
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
+import os.path
 
 def find_neighbour(index, scan_register, length_of_row):
     """
@@ -38,7 +39,7 @@ def file_index(index):
         return str(index)
 
 def import_data(index, save_path, base_filename):
-    data = np.genfromtxt(save_path + base_filename + file_index(index) + '_1D.csv', delimiter= ',')
+    data = np.genfromtxt(os.path.join(save_path, base_filename + file_index(index) + '_1D.csv'), delimiter= ',')
     neighbor = data[:,1]
     return neighbor
 
@@ -47,7 +48,7 @@ def nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_
     """
     concatenate all the csv files in a folder, return a 2D numpy array
     """
-    master_file = folder_path + base_filename + 'scan1.csv'
+    master_file = os.path.join(folder_path + base_filename + 'scan1.csv')
     master_data = np.genfromtxt(master_file, delimiter=',', skip_header=1)
     scan_register = list(master_data[:,0])
     index_neighbor1, index_neighbor2 = find_neighbour(index, scan_register, num_of_smpls_on_wafer)
