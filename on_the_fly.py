@@ -99,7 +99,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                 # # save 1D plot with detected peaks shown in the plot
                 oneDplot.save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path)
                 break
-            except (OSError, IOError):
+            except (OSError, IOError, IndexError):
                 # The image was being created but not complete yet
                 print 'waiting for image', imageFullname+' to be ready...'
                 time.sleep(1)

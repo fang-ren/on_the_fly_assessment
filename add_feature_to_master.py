@@ -20,7 +20,7 @@ def add_feature_to_master(feature, base_filename, folder_path, save_path, master
     dimension = np.min((master_data.shape[0], feature.shape[0]))
     #print dimension, master_data[:dimension:].shape, feature[:dimension:].shape
     master_data = np.concatenate((master_data[:dimension:], feature[:dimension:]), axis = 1)
-    np.savetxt(save_path + base_filename + master_index + 'master_metadata.csv', master_data, \
+    np.savetxt(os.path.join(save_path, base_filename + master_index + 'master_metadata.csv'), master_data, \
     delimiter=",", header="register#,plate_x,plate_y,Seconds,i0,i1,mon,bstop,Omron,CH6,\
     CH7,TEMP,marccd,ICRxT,OCRxT,ROI1,ROI2,ROI3,ROI4,ROI5,ROI6,ROI7,ROI8,ROI9,\
     ROI10,RIO11,ROI12,ROI13,SWX,CCD1,CTEMP,Timer,pd1,pd2,pd3,pd4,pd5,pd6,pd7,\
