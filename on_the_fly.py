@@ -13,7 +13,7 @@ import numpy as np
 import random
 
 # import modules
-reduction = imp.load_source("data_reduction", "data_reduction.py")
+reduction = imp.load_source("data_reduction", "data_reduction_smooth.py")
 Qchi = imp.load_source("save_Qchi", "save_Qchi.py")
 oneDplot = imp.load_source("save_1Dplot", "save_1Dplot.py")
 oneDcsv = imp.load_source("save_1Dcsv", "save_1Dcsv.py")
