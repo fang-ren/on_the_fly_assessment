@@ -18,18 +18,19 @@ def add_feature_to_master(features, base_filename, folder_path, save_path, maste
     master_filename = os.path.join(folder_path, base_filename + 'scan1.csv')
     # print master_filename
 
-    with open(master_filename, 'rb') as csv_input:
-        reader = csv.reader(csv_input, delimiter=',')
-        i = 0
-        master_data = []
-        for row in reader:
-            if i == 0:
-                line_for_specPlot = row
-            elif i == 1:
-                header = row
-            else:
-                master_data.append(row)
-            i += 1
+    csv_input = open(master_filename, 'rb')
+    reader = csv.reader(csv_input, delimiter=',')
+    i = 0
+    master_data = []
+    for row in reader:
+        if i == 0:
+            line_for_specPlot = row
+        elif i == 1:
+            header = row
+        else:
+            master_data.append(row)
+        i += 1
+    csv_input.close
 
     # there are wired string like ' 4.38247e-' in the data, need to replace them with zero first.
     master_data = np.array(master_data)
@@ -42,7 +43,7 @@ def add_feature_to_master(features, base_filename, folder_path, save_path, maste
             master_data[i][1] = 0
 
     # change data array into float
-    master_data = master_data.astype(float)
+    # master_data = master_data.astype(float)
 
     # for debugging
     # print type(header)
@@ -63,9 +64,11 @@ def add_feature_to_master(features, base_filename, folder_path, save_path, maste
     master_data = np.concatenate((master_data[(index-num_of_scan_processed):index, :], features[1:num_of_scan_processed+1, :]), axis=1)
 
     # print master_data
-    with open(os.path.join(save_path, base_filename + master_index + 'master_csv.csv'), 'wb') as csv_output:
-        writer = csv.writer(csv_output, delimiter=',')
-        writer.writerow(line_for_specPlot)
-        writer.writerow(header)
-        for row in master_data:
-            writer.writerow(row)
+
+    csv_output =  open(os.path.join(save_path, base_filename + master_index + 'master_csv.csv'), 'wb')
+    writer = csv.writer(csv_output, delimiter=',')
+    writer.writerow(line_for_specPlot)
+    writer.writerow(header)
+    for row in master_data:
+        writer.writerow(row)
+    csv_output.close

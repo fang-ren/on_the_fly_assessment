@@ -13,7 +13,7 @@ import numpy as np
 import random
 
 # import modules
-reduction = imp.load_source("data_reduction", "data_reduction_smooth.py")
+reduction = imp.load_source("data_reduction", "data_reduction.py")
 Qchi = imp.load_source("save_Qchi", "save_Qchi.py")
 oneDplot = imp.load_source("save_1Dplot", "save_1Dplot.py")
 oneDcsv = imp.load_source("save_1Dcsv", "save_1Dcsv.py")
@@ -99,6 +99,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                                                             num_of_smpls_on_wafer)
                 attribute4.append(newRow4)
                 # print attribute1, attribute2, attribute3, attribute4
+
                 # add features (floats) to master metadata
                 attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4), axis=1)
                 add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)

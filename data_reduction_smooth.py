@@ -35,6 +35,5 @@ def data_reduction(imageFullname, d_in_pixel, Rot, tilt, lamda, x0, y0, PP):
 
     # the output unit for Q is angstrom-1
     Qlist = Qlist * 10e8
-
     return Q, chi, cake, Qlist, IntAve
 
