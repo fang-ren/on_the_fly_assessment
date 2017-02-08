@@ -2,7 +2,7 @@
 """
 Created on Mon Jun 06 18:02:32 2016
 
-@author: fangren
+@author: Apurva Mehta, fangren
 """
 
 import numpy as np

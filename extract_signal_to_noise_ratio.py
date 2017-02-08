@@ -1,3 +1,10 @@
+"""
+Created on Feb 7 2017
+
+@author: Fang Ren
+Contributor: Yijin Liu
+"""
+
 from scipy.signal import medfilt, savgol_filter
 import numpy as np
 from scipy.optimize import curve_fit

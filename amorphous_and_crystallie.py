@@ -1,3 +1,8 @@
+"""
+Created on Feb 7 2017
+
+@author: Fang Ren
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,4 +21,4 @@ plt.ylim(500, 7000)
 plt.legend()
 plt.xlabel('Q')
 plt.ylabel('Intensity')
-plt.savefig(path+'amorphous and crystalline', dpi = )
+plt.savefig(path+'amorphous and crystalline', dpi = 600)

@@ -1,4 +1,8 @@
+"""
+Created on Feb 7 2017
 
+@author: Fang Ren
+"""
 import matplotlib.pyplot as plt
 import numpy as np
 import glob
