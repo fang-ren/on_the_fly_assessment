@@ -12,7 +12,6 @@ import imp
 import numpy as np
 import random
 
-
 # import modules
 reduction = imp.load_source("data_reduction", "data_reduction_smooth.py")
 Qchi = imp.load_source("save_Qchi", "save_Qchi.py")
@@ -24,6 +23,7 @@ add_feature = imp.load_source("add_feature_to_master", "add_feature_to_master.py
 save_texture = imp.load_source("save_texture_plot_csv", "save_texture_plot_csv.py")
 extract_texture = imp.load_source("extract_texture_extent", "extract_texture_extent.py")
 neighbor = imp.load_source("nearest_neighbor_distance", "nearest_neighbor_cosine_distances.py")
+
 
 def file_index(index):
     """
@@ -38,8 +38,11 @@ def file_index(index):
     elif len(str(index)) == 4:
         return str(index)
 
+
 def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda,
-               x0, y0, PP, num_of_smpls_on_wafer, attribute1 = [], attribute2 = [], attribute3 = [], attribute4 = []):
+               x0, y0, PP, num_of_smpls_on_wafer, attribute1=[['scan#', 'Imax', 'Iave', 'Imax/Iave']],
+               attribute2=[['scan#', 'texture_sum']], attribute3=[['scan#', 'peak_num']],
+               attribute4=[['scan#', 'neighbor_distance']]):
     """
     run when starting to collect XRD images, and finish when finishing measuring the whole library
     """
@@ -56,24 +59,24 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
     master_index = str(int(random.random() * 100000000))
 
     while (index <= last_scan):
-        imageFilename = base_filename+ file_index(index) + '.tif'
+        imageFilename = base_filename + file_index(index) + '.tif'
         imageFullname = os.path.join(folder_path, imageFilename)
-        print("\r")    
+        print("\r")
         # wait until an image is created, and process the previous image, to avoid crashing
-        print 'waiting for image', imageFullname+' to be created...'
-        print("\r")    
+        print 'waiting for image', imageFullname + ' to be created...'
+        print("\r")
         while not os.path.exists(imageFullname):
             time.sleep(1)
-	  #print 'sleeping'
-        print 'processing image '+ imageFullname
+            # print 'sleeping'
+        print 'processing image ' + imageFullname
         print("\r")
-        
+
         while (1):
-            try: 
+            try:
                 # data_reduction to generate Q-chi and 1D spectra, Q
                 Q, chi, cake, Qlist, IntAve = reduction.data_reduction(imageFullname, \
-                d_in_pixel, Rot, tilt, lamda, x0, y0, PP)
-                # save Qchi as a plot *.png
+                                                                       d_in_pixel, Rot, tilt, lamda, x0, y0, PP)
+                # save Qchi as a plot *.png and *.mat
                 Qchi.save_Qchi(Q, chi, cake, imageFilename, save_path)
                 # save 1D spectra as a *.csv
                 oneDcsv.save_1Dcsv(Qlist, IntAve, imageFilename, save_path)
@@ -86,25 +89,27 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                 newRow2 = extract_texture.extract_texture_extent(Qlist_texture, texture, index)
                 attribute2.append(newRow2)
                 # extract composition information if the information is available
-
                 # extract the number of peaks in 1D spectra as feature 3
                 newRow3, peaks = peak_num.extract_peak_num(Qlist, IntAve, index)
                 attribute3.append(newRow3)
-                # extract neighbor distances as feature4
-                newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename, num_of_smpls_on_wafer)
-                attribute4.append(newRow4)
-                # add features (floats) to master metadata
-                attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4), axis = 1)
-                add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index)
                 # # save 1D plot with detected peaks shown in the plot
                 oneDplot.save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path)
+                # extract neighbor distances as feature4
+                newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename,
+                                                            num_of_smpls_on_wafer)
+                attribute4.append(newRow4)
+                # print attribute1, attribute2, attribute3, attribute4
+                # add features (floats) to master metadata
+                attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4), axis=1)
+                add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
+
                 break
-            except (OSError, IOError, IndexError):
+            except (OSError, IOError):
                 # The image was being created but not complete yet
-                print 'waiting for image', imageFullname+' to be ready...'
+                print 'waiting for image', imageFullname + ' to be ready...'
                 time.sleep(1)
-        index += 1    # next file
-        
+        index += 1  # next file
+
 
 
 

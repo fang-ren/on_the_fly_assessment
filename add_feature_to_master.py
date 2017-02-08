@@ -8,20 +8,64 @@ Created on Thu Apr 21 14:48:10 2016
 import numpy as np
 from numpy import genfromtxt
 import os.path
+import csv
 
-def add_feature_to_master(feature, base_filename, folder_path, save_path, master_index):
+def add_feature_to_master(features, base_filename, folder_path, save_path, master_index, index):
     """
     add a feature 'feature' to master meta data, feature is in the form of a ziped row
     """
-    feature = np.array(feature)
-    master_file = os.path.join(folder_path, base_filename +'scan1.csv')
-    master_data = genfromtxt(master_file, delimiter=',', skip_header = 1)
-    master_data = np.nan_to_num(master_data)
-    dimension = np.min((master_data.shape[0], feature.shape[0]))
-    #print dimension, master_data[:dimension:].shape, feature[:dimension:].shape
-    master_data = np.concatenate((master_data[:dimension:], feature[:dimension:]), axis = 1)
-    np.savetxt(os.path.join(save_path, base_filename + master_index + 'master_metadata.csv'), master_data, \
-    delimiter=",", header="register#,plate_x,plate_y,Seconds,i0,i1,mon,bstop,Omron,CH6,\
-    CH7,TEMP,marccd,ICRxT,OCRxT,ROI1,ROI2,ROI3,ROI4,ROI5,ROI6,ROI7,ROI8,ROI9,\
-    ROI10,RIO11,ROI12,ROI13,SWX,CCD1,CTEMP,Timer,pd1,pd2,pd3,pd4,pd5,pd6,pd7,\
-    pd8,pd9,pd10,pd11,pd12,pd13,pd14,pd15,pd16,scan#,Imax,Iave,ratio,scan#,texture,scan#,peak_num,scan#, neighbor_distance")
+
+    master_filename = os.path.join(folder_path, base_filename + 'scan1.csv')
+    # print master_filename
+
+    with open(master_filename, 'rb') as csv_input:
+        reader = csv.reader(csv_input, delimiter=',')
+        i = 0
+        master_data = []
+        for row in reader:
+            if i == 0:
+                line_for_specPlot = row
+            elif i == 1:
+                header = row
+            else:
+                master_data.append(row)
+            i += 1
+
+    # there are wired string like ' 4.38247e-' in the data, need to replace them with zero first.
+    master_data = np.array(master_data)
+    for i in range(len(master_data[:, 2])):
+        if 'e' in master_data[i][2]:
+            master_data[i][2] = 0
+
+    for i in range(len(master_data[:, 1])):
+        if 'e' in master_data[i][1]:
+            master_data[i][1] = 0
+
+    # change data array into float
+    master_data = master_data.astype(float)
+
+    # for debugging
+    # print type(header)
+    # print type(features[0,:])
+
+    header = header + list(features[0, :])
+
+    num_of_scan_processed = features.shape[0]-1
+
+    # for debugging
+    # print header
+    # print dimension
+    # print master_data.shape[0], features.shape[0] - 1
+    # print num_of_scan_processed
+    # print master_data[(index-num_of_scan_processed):index, :].shape
+    # print features[:num_of_scan_processed, :].shape
+
+    master_data = np.concatenate((master_data[(index-num_of_scan_processed):index, :], features[1:num_of_scan_processed+1, :]), axis=1)
+
+    # print master_data
+    with open(os.path.join(save_path, base_filename + master_index + 'master_csv.csv'), 'wb') as csv_output:
+        writer = csv.writer(csv_output, delimiter=',')
+        writer.writerow(line_for_specPlot)
+        writer.writerow(header)
+        for row in master_data:
+            writer.writerow(row)

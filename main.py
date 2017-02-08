@@ -18,10 +18,10 @@ y0 = 2309.54007395    # beam center in pixel-space
 PP = 0.95   # beam polarization, decided by beamline setup
 
 # user input
-folder_path = 'C:\Research_FangRen\Data\Apr2016\Jae_samples\silicon'
-base_filename = 'silicon_30s_t2_'
-index = 1   # starting from this scan#
+folder_path = 'C:\Research_FangRen\Data\Metallic_glasses_data\CoZrFe_ternary\Sample1'
+base_filename = 'Sample1_24x24_t30_'
+index = 2   # starting from this scan#
 last_scan = 441  # end with this scan#
-num_of_smpls_on_wafer = 25 # the number of samples in one row
+num_of_smpls_per_row = 25 # the number of samples in a row
 
-run.on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda, x0, y0, PP, num_of_smpls_on_wafer)
+run.on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda, x0, y0, PP, num_of_smpls_per_row)
