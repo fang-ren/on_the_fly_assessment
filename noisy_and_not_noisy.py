@@ -260,7 +260,7 @@ ax9.annotate('(d)', xy=get_axis_limits(ax9))
 
 
 plt.savefig(path+'signal_to_noise_ratio', dpi = 600)
-plt.close('all')
+# plt.close('all')
 #
 # plt.figure(2)
 # x = np.array([1/np.log(popt1[2]), 1/np.log(popt2[2]), 1/np.log(popt3[2]), 1/np.log(popt4[2]), 1/np.log(popt_sum[2])])
@@ -295,3 +295,5 @@ plt.close('all')
 # plt.plot(x[4], y[4], 'o', color = 'm')
 # plt.xlabel('1/peak_width)')
 # plt.ylabel('SNR')
+
+print slope, intercept

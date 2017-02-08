@@ -23,7 +23,7 @@ add_feature = imp.load_source("add_feature_to_master", "add_feature_to_master.py
 save_texture = imp.load_source("save_texture_plot_csv", "save_texture_plot_csv.py")
 extract_texture = imp.load_source("extract_texture_extent", "extract_texture_extent.py")
 neighbor = imp.load_source("nearest_neighbor_distance", "nearest_neighbor_cosine_distances.py")
-
+SNR = imp.load_source("extract_SNR", "extract_signal_to_noise_ratio.py")
 
 def file_index(index):
     """
@@ -42,7 +42,7 @@ def file_index(index):
 def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda,
                x0, y0, PP, num_of_smpls_on_wafer, attribute1=[['scan#', 'Imax', 'Iave', 'Imax/Iave']],
                attribute2=[['scan#', 'texture_sum']], attribute3=[['scan#', 'peak_num']],
-               attribute4=[['scan#', 'neighbor_distance']]):
+               attribute4=[['scan#', 'neighbor_distance']], attribute5 = [['scan#', 'SNR']]):
     """
     run when starting to collect XRD images, and finish when finishing measuring the whole library
     """
@@ -80,28 +80,32 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                 Qchi.save_Qchi(Q, chi, cake, imageFilename, save_path)
                 # save 1D spectra as a *.csv
                 oneDcsv.save_1Dcsv(Qlist, IntAve, imageFilename, save_path)
-                # extract maximum/average intensity from 1D spectra as feature 1
+                # extract maximum/average intensity from 1D spectra as attribute1
                 newRow1 = max_ave.extract_max_ave_intensity(IntAve, index)
                 attribute1.append(newRow1)
                 # save 1D texture spectra as a plot (*.png) and *.csv
                 Qlist_texture, texture = save_texture.save_texture_plot_csv(Q, chi, cake, imageFilename, save_path)
-                # extract texture square sum from the 1D texture spectra as feature2
+                # extract texture square sum from the 1D texture spectra as attribute2
                 newRow2 = extract_texture.extract_texture_extent(Qlist_texture, texture, index)
                 attribute2.append(newRow2)
                 # extract composition information if the information is available
-                # extract the number of peaks in 1D spectra as feature 3
+                # extract the number of peaks in 1D spectra as attribute3
                 newRow3, peaks = peak_num.extract_peak_num(Qlist, IntAve, index)
                 attribute3.append(newRow3)
                 # # save 1D plot with detected peaks shown in the plot
                 oneDplot.save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path)
-                # extract neighbor distances as feature4
+                # extract neighbor distances as attribute4
                 newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename,
                                                             num_of_smpls_on_wafer)
                 attribute4.append(newRow4)
                 # print attribute1, attribute2, attribute3, attribute4
 
+                # extract signal-to-noise ratio
+                newRow5 = SNR.extract_SNR(index, IntAve)
+                attribute5.append(newRow5)
+
                 # add features (floats) to master metadata
-                attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4), axis=1)
+                attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4, attribute5), axis=1)
                 add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
 
                 break
