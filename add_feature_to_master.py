@@ -49,7 +49,7 @@ def add_feature_to_master(features, base_filename, folder_path, save_path, maste
     # print type(header)
     # print type(features[0,:])
 
-    header = header + list(features[0, :])
+    header = header[:master_data.shape[1]] + list(features[0, :])
 
     num_of_scan_processed = features.shape[0]-1
 
