@@ -32,7 +32,7 @@ num_of_smpls_per_row = 25 # the number of samples in a row. It is needed if the 
 extract_Imax_Iave_ratio_module = 'on'
 extract_texture_module = 'on'
 extract_signal_to_noise_module = 'on'
-extract_neighbor_distance_module = 'on'   #  this module requires the position information of the sample in physical space
+extract_neighbor_distance_module = 'off'   #  this module requires a master file that indicate the positions of the sample in physical space
 add_feature_to_csv_module = 'on'
 
 
