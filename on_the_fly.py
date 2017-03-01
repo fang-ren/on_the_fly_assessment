@@ -40,9 +40,13 @@ def file_index(index):
 
 
 def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda,
-               x0, y0, PP, num_of_smpls_on_wafer, attribute1=[['scan#', 'Imax', 'Iave', 'Imax/Iave']],
-               attribute2=[['scan#', 'texture_sum']], attribute3=[['scan#', 'peak_num']],
-               attribute4=[['scan#', 'neighbor_distance']], attribute5 = [['scan#', 'SNR']]):
+               x0, y0, PP, num_of_smpls_per_row, extract_Imax_Iave_ratio_module, extract_texture_module,
+               extract_signal_to_noise_module, extract_neighbor_distance_module, add_feature_to_csv_module,
+               attribute1=[['scan#', 'Imax', 'Iave', 'Imax/Iave']],
+               attribute2=[['scan#', 'texture_sum']],
+               attribute3=[['scan#', 'peak_num']],
+               attribute4=[['scan#', 'neighbor_distance']],
+               attribute5= [['scan#', 'SNR']]):
     """
     run when starting to collect XRD images, and finish when finishing measuring the whole library
     """
@@ -57,8 +61,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
 
     # generate a random series of numbers, in case restart the measurement from the middle, the new master file will not overwrite the previous one
     master_index = str(int(random.random() * 100000000))
-
-    while (index <= last_scan):
+    while (index <= last_scan) and sleep < 6000:
         imageFilename = base_filename + file_index(index) + '.tif'
         imageFullname = os.path.join(folder_path, imageFilename)
         print("\r")
@@ -72,6 +75,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
         print("\r")
 
         while (1):
+            sleep = 0
             try:
                 # data_reduction to generate Q-chi and 1D spectra, Q
                 Q, chi, cake, Qlist, IntAve = reduction.data_reduction(imageFullname, \
@@ -80,39 +84,48 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                 Qchi.save_Qchi(Q, chi, cake, imageFilename, save_path)
                 # save 1D spectra as a *.csv
                 oneDcsv.save_1Dcsv(Qlist, IntAve, imageFilename, save_path)
-                # extract maximum/average intensity from 1D spectra as attribute1
-                newRow1 = max_ave.extract_max_ave_intensity(IntAve, index)
-                attribute1.append(newRow1)
-                # save 1D texture spectra as a plot (*.png) and *.csv
-                Qlist_texture, texture = save_texture.save_texture_plot_csv(Q, chi, cake, imageFilename, save_path)
-                # extract texture square sum from the 1D texture spectra as attribute2
-                newRow2 = extract_texture.extract_texture_extent(Qlist_texture, texture, index)
-                attribute2.append(newRow2)
                 # extract composition information if the information is available
-                # extract the number of peaks in 1D spectra as attribute3
+                # extract the number of peaks in 1D spectra as attribute3 by default
                 newRow3, peaks = peak_num.extract_peak_num(Qlist, IntAve, index)
                 attribute3.append(newRow3)
-                # # save 1D plot with detected peaks shown in the plot
+
+                # save 1D plot with detected peaks shown in the plot
                 oneDplot.save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path)
-                # extract neighbor distances as attribute4
-                newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename,
-                                                            num_of_smpls_on_wafer)
-                attribute4.append(newRow4)
-                # print attribute1, attribute2, attribute3, attribute4
 
-                # extract signal-to-noise ratio
-                newRow5 = SNR.extract_SNR(index, IntAve)
-                attribute5.append(newRow5)
+                if extract_Imax_Iave_ratio_module == 'on':
+                    # extract maximum/average intensity from 1D spectra as attribute1
+                    newRow1 = max_ave.extract_max_ave_intensity(IntAve, index)
+                    attribute1.append(newRow1)
 
-                # add features (floats) to master metadata
-                attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4, attribute5), axis=1)
-                add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
+                if extract_texture_module == 'on':
+                    # save 1D texture spectra as a plot (*.png) and *.csv
+                    Qlist_texture, texture = save_texture.save_texture_plot_csv(Q, chi, cake, imageFilename, save_path)
+                    # extract texture square sum from the 1D texture spectra as attribute2
+                    newRow2 = extract_texture.extract_texture_extent(Qlist_texture, texture, index)
+                    attribute2.append(newRow2)
+
+                if extract_neighbor_distance_module == 'on':
+                    # extract neighbor distances as attribute4
+                    newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename,
+                                                                num_of_smpls_per_row)
+                    attribute4.append(newRow4)
+
+                if extract_signal_to_noise_module == 'on':
+                    # extract signal-to-noise ratio
+                    newRow5 = SNR.extract_SNR(index, IntAve)
+                    attribute5.append(newRow5)
+
+                if add_feature_to_csv_module == 'on':
+                    # add features (floats) to master metadata
+                    attributes = np.concatenate((attribute1, attribute2, attribute3, attribute4, attribute5), axis=1)
+                    add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
 
                 break
             except (OSError, IOError):
                 # The image was being created but not complete yet
                 print 'waiting for image', imageFullname + ' to be ready...'
                 time.sleep(1)
+                sleep += 1
         index += 1  # next file
 
 
