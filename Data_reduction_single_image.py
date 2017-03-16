@@ -37,9 +37,12 @@ d = d_in_pixel*pixelsize*0.001  # measured in milimeters
 
 p = pyFAI.AzimuthalIntegrator(wavelength=lamda)
 p.setFit2D(d,x0,y0,tilt,Rot,pixelsize,pixelsize)
-cake,Q,chi = p.integrate2d(imArray,1000, 1000, unit='2th_deg', mask = detector_mask, polarization_factor = PP)
-# Q = Q * 10e8
+cake,Q,chi = p.integrate2d(imArray,1000, 1000, mask = detector_mask, polarization_factor = PP)
+Q = Q * 10e8
 chi = chi+90
+Qlist, IntAve = p.integrate1d(imArray, 1000, mask=detector_mask, polarization_factor=PP)
+Qlist = Qlist * 10e8
+
 
 # # generate a tiff image
 # X = [i+1 for i in range(s)]
@@ -56,32 +59,40 @@ chi = chi+90
 Q, chi = np.meshgrid(Q, chi)
 plt.figure(2, (5,4))
 # plt.title('Q-$\Psi$')
-plt.pcolormesh(chi, Q, cake)
+plt.pcolormesh(chi, Q, cake, cmap = 'jet')
 #plt.imshow(cake)
 plt.xlabel('$\gamma$')
 plt.ylabel('Q')
-# plt.ylim((0.5, 6))
-# plt.xlim((-58, 63))
+plt.ylim((0.6, 5.87))
+plt.xlim((-58, 63))
 plt.colorbar()
 plt.clim(0, 2000)
 plt.tight_layout()
-# plt.savefig(path+ 'Qpsi', dpi = 600)
+plt.savefig(path+ 'Qpsi', dpi = 600)
 
+twoTheta = np.arcsin(Qlist*1.54/4/np.pi) *2 *180/np.pi
+# generate a 1D spectra with both Q axis and 2 theta axis
+fig = plt.figure(3, (4,4))
+ax1 = fig.add_subplot(111)
+ax2 = ax1.twinx()
 
-# # generate a Q-gamma image with polar correction
-# Q, chi = np.meshgrid(Q, chi)
-# plt.figure(2, (5,4))
-# # plt.title('Q-$\Psi$')
-# plt.pcolormesh(Q, chi, cake)
-# #plt.imshow(cake)
-# plt.ylabel('$\gamma$')
-# plt.xlabel('Q')
-# plt.xlim((0.5, 6))
-# plt.ylim((-58, 63))
-# plt.colorbar()
-# plt.clim(0, 9000)
-# plt.tight_layout()
-# plt.savefig(path+ 'Qpsi', dpi = 600)
+ax1.plot(IntAve,Qlist, 'b')
+ax1.set_ylim(0.6, 5.87)
+ax1.set_ylabel("Q")
+ax1.set_xlabel("Intensity")
+
+new_tick_locations = np.arange(1, 6, 1)
+
+ax2.set_ylim(ax1.get_ylim())
+ax2.set_yticks(new_tick_locations)
+ax2.set_yticklabels(np.round(np.arcsin(new_tick_locations*1.54/4/np.pi) *2 *180/np.pi, 1))
+ax2.set_ylabel("2$\\theta$")
+plt.show()
+plt.tight_layout()
+plt.savefig(path+ '1D', dpi = 600)
+
+plt.close("all")
+
 
 
 # # generate a vertical column average image
@@ -95,20 +106,9 @@ plt.tight_layout()
 # plt.ylim((0.6, 5.87))
 # plt.tight_layout()
 # plt.savefig(path+ '1D', dpi = 600)
-
-
-# # generate a column average image
-# plt.figure(3, (5,4))
-# # plt.title('Column sum')
-# Qlist, IntAve = p.integrate1d(imArray, 1000, mask = detector_mask, polarization_factor = PP)
-# Qlist = Qlist * 10e8
-# plt.plot(Qlist, IntAve)
-# plt.ylabel('Intensity')
-# plt.xlabel('Q')
-# plt.xlim((0.6, 5.87))
-# plt.tight_layout()
-# plt.savefig(path+ '1D', dpi = 600)
-
+#
+#
+#
 #
 # twoTheta = np.arcsin(Qlist*1.54/4/np.pi) *2 *180/np.pi
 # # generate a column average image
@@ -120,11 +120,7 @@ plt.tight_layout()
 # plt.ylim((8, 90))
 # plt.tight_layout()
 # plt.savefig(path+ '1D_2theta', dpi = 600)
-#
-# #######################################################
-# ###### remeshing correction should be added here ######
-# #######################################################
-#
+
 
 # # generate a texture image
 # plt.figure(4, (5,4))
