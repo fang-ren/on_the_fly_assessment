@@ -252,6 +252,7 @@ ax9.add_patch(patches.Rectangle((-3.15, 31.65), 7.15, 38.35,alpha = 0.5, facecol
 # ax9.arrow(1, 55, 1, 0, head_width=2, head_length=0.5, fc='k', ec='k')
 ax9.annotate('good quality data', xy=(2, 60), xytext=(0, 50))
 slope, intercept, r_value, p_value, std_err = linregress(x, y)
+print 'regression', slope, intercept, r_value, p_value, std_err
 fit = slope *x + intercept
 ax9.plot(x, fit, 'k--', label = 'fit')
 

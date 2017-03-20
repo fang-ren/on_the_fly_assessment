@@ -12,8 +12,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # open MARCCD tiff image
-path = 'C:\\Research_FangRen\\Publications\\on_the_fly_paper\\Sample_data\\'
-im = Image.open(path + 'LaB6.tif')
+# path = 'C:\\Research_FangRen\\Publications\\on_the_fly_paper\\Sample_data\\'
+# im = Image.open(path + 'LaB6.tif')
+path = 'C:\\Research_FangRen\\Data\\Y_Han\\'
+im = Image.open(path + 'COM4_01107_4x11_60s_0030.tif')
+
 # change image object into an array
 imArray = np.array(im)
 s = int(imArray.shape[0])
@@ -32,66 +35,66 @@ y0 = 2237.93277884    # beam center in pixel-space
 PP = 0.95   # beam polarization, decided by beamline setup
 
 
-pixelsize = 79    # measured in microns
-d = d_in_pixel*pixelsize*0.001  # measured in milimeters
+# pixelsize = 79    # measured in microns
+# d = d_in_pixel*pixelsize*0.001  # measured in milimeters
+#
+# p = pyFAI.AzimuthalIntegrator(wavelength=lamda)
+# p.setFit2D(d,x0,y0,tilt,Rot,pixelsize,pixelsize)
+# cake,Q,chi = p.integrate2d(imArray,1000, 1000, mask = detector_mask, polarization_factor = PP)
+# Q = Q * 10e8
+# chi = chi+90
+# Qlist, IntAve = p.integrate1d(imArray, 1000, mask=detector_mask, polarization_factor=PP)
+# Qlist = Qlist * 10e8
+#
 
-p = pyFAI.AzimuthalIntegrator(wavelength=lamda)
-p.setFit2D(d,x0,y0,tilt,Rot,pixelsize,pixelsize)
-cake,Q,chi = p.integrate2d(imArray,1000, 1000, mask = detector_mask, polarization_factor = PP)
-Q = Q * 10e8
-chi = chi+90
-Qlist, IntAve = p.integrate1d(imArray, 1000, mask=detector_mask, polarization_factor=PP)
-Qlist = Qlist * 10e8
+# generate a tiff image
+X = [i+1 for i in range(s)]
+Y = [i+1 for i in range(s)]
+X, Y = np.meshgrid(X, Y)
+plt.figure(1, (4,4))
+plt.pcolormesh(X, Y, imArray)
+plt.clim(0, 4000)
+plt.ylim((0, s))
+plt.xlim((0, s))
+plt.savefig(path+ 'image', dpi = 600)
 
-
-# # generate a tiff image
-# X = [i+1 for i in range(s)]
-# Y = [i+1 for i in range(s)]
-# X, Y = np.meshgrid(X, Y)
-# plt.figure(1, (4,4))
-# plt.pcolormesh(X, Y, imArray)
+# # generate a vertical Q-gamma image with polar correction
+# Q, chi = np.meshgrid(Q, chi)
+# plt.figure(2, (5,4))
+# # plt.title('Q-$\Psi$')
+# plt.pcolormesh(chi, Q, cake, cmap = 'jet')
+# #plt.imshow(cake)
+# plt.xlabel('$\gamma$')
+# plt.ylabel('Q')
+# plt.ylim((0.6, 5.87))
+# plt.xlim((-58, 63))
+# plt.colorbar()
 # plt.clim(0, 2000)
-# plt.ylim((0, s))
-# plt.xlim((0, s))
-# plt.savefig(path+ 'image', dpi = 600)
-
-# generate a vertical Q-gamma image with polar correction
-Q, chi = np.meshgrid(Q, chi)
-plt.figure(2, (5,4))
-# plt.title('Q-$\Psi$')
-plt.pcolormesh(chi, Q, cake, cmap = 'jet')
-#plt.imshow(cake)
-plt.xlabel('$\gamma$')
-plt.ylabel('Q')
-plt.ylim((0.6, 5.87))
-plt.xlim((-58, 63))
-plt.colorbar()
-plt.clim(0, 2000)
-plt.tight_layout()
-plt.savefig(path+ 'Qpsi', dpi = 600)
-
-twoTheta = np.arcsin(Qlist*1.54/4/np.pi) *2 *180/np.pi
-# generate a 1D spectra with both Q axis and 2 theta axis
-fig = plt.figure(3, (4,4))
-ax1 = fig.add_subplot(111)
-ax2 = ax1.twinx()
-
-ax1.plot(IntAve,Qlist, 'b')
-ax1.set_ylim(0.6, 5.87)
-ax1.set_ylabel("Q")
-ax1.set_xlabel("Intensity")
-
-new_tick_locations = np.arange(1, 6, 1)
-
-ax2.set_ylim(ax1.get_ylim())
-ax2.set_yticks(new_tick_locations)
-ax2.set_yticklabels(np.round(np.arcsin(new_tick_locations*1.54/4/np.pi) *2 *180/np.pi, 1))
-ax2.set_ylabel("2$\\theta$")
-plt.show()
-plt.tight_layout()
-plt.savefig(path+ '1D', dpi = 600)
-
-plt.close("all")
+# plt.tight_layout()
+# plt.savefig(path+ 'Qpsi', dpi = 600)
+#
+# twoTheta = np.arcsin(Qlist*1.54/4/np.pi) *2 *180/np.pi
+# # generate a 1D spectra with both Q axis and 2 theta axis
+# fig = plt.figure(3, (4,4))
+# ax1 = fig.add_subplot(111)
+# ax2 = ax1.twinx()
+#
+# ax1.plot(IntAve,Qlist, 'b')
+# ax1.set_ylim(0.6, 5.87)
+# ax1.set_ylabel("Q")
+# ax1.set_xlabel("Intensity")
+#
+# new_tick_locations = np.arange(1, 6, 1)
+#
+# ax2.set_ylim(ax1.get_ylim())
+# ax2.set_yticks(new_tick_locations)
+# ax2.set_yticklabels(np.round(np.arcsin(new_tick_locations*1.54/4/np.pi) *2 *180/np.pi, 1))
+# ax2.set_ylabel("2$\\theta$")
+# plt.show()
+# plt.tight_layout()
+# plt.savefig(path+ '1D', dpi = 600)
+#
+# plt.close("all")
 
 
 
