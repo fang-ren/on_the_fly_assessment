@@ -62,24 +62,25 @@ IntAve_smoothed4 =  savgol_filter(IntAve4,  filter_window, 2)
 noise4 = IntAve4 - IntAve_smoothed4
 noise4 = np.nan_to_num(noise4)
 
+f = 250000
 Qlist5 = Qlist4
-IntAve5 = data4[:, 4]*250000
+IntAve5 = data4[:, 4]*f
 Qlist6 = Qlist4
-IntAve6 = data4[:, 5]*250000
+IntAve6 = data4[:, 5]*f
 Qlist7 = Qlist4
-IntAve7 = data4[:, 6]*250000
+IntAve7 = data4[:, 6]*f
 Qlist8 = Qlist4
-IntAve8 = data4[:, 7]*250000
+IntAve8 = data4[:, 7]*f
 Qlist9 = Qlist4
-IntAve9 = data4[:, 8]*250000
+IntAve9 = data4[:, 8]*f
 Qlist10 = Qlist4
-IntAve10 = data4[:, 9]*250000
+IntAve10 = data4[:, 9]*f
 Qlist11 = Qlist4
-IntAve11 = data4[:, 10]*250000
+IntAve11 = data4[:, 10]*f
 Qlist12 = Qlist4
-IntAve12 = data4[:, 11]*250000
+IntAve12 = data4[:, 11]*f
 Qlist13 = Qlist4
-IntAve13 = data4[:, 12]*250000
+IntAve13 = data4[:, 12]*f
 
 IntAve_sum = (IntAve4+IntAve5+IntAve6+IntAve7+IntAve8+IntAve9+IntAve10+IntAve11+IntAve12+IntAve13)/10
 
