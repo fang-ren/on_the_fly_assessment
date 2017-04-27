@@ -10,7 +10,7 @@ import numpy as np
 from scipy.stats import signaltonoise
 
 # open MARCCD tiff image
-path = 'C:\\Research_FangRen\\Publications\\on_the_fly_paper\\Sample_data\\'
+path = '..\\..\\data\\'
 im = Image.open(path + 'LaB6.tif')
 # change image object into an array
 imArray = np.array(im)
