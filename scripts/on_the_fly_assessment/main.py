@@ -18,12 +18,12 @@ PP = 0.95   # beam polarization, according to beamline setup. Contact beamline s
 
 
 # folder and file info
-folder_path = 'C:\Research_FangRen\Data\Metallic_glasses_data\FeNbTi\SampleB2_19'  # specify a folder for the software to watch
+folder_path = 'sample_data\\'  # specify a folder for the software to watch
 base_filename = 'SampleB2_19_24x24_t30_'   # in order for the program to recognize newly created files, the file needs to
                                         # have the same basefile, but the index automatically increases by 1 evertime a new file is created.
                                         # For the current example, the first file is SampleB2_19_24x24_t30_0001, and second SampleB2_19_24x24_t30_0002...
 index = 1   # starting from this scan# The program will automatically add digits to make it into four ditigs, for example, 1 will become 0001, 100 will become 0100
-last_scan = 441  # end with this scan#, if not sure, fill in a large number like 1000. the program will exit after sleeping for 1000 seconds
+last_scan = 3  # end with this scan#, if not sure, fill in a large number like 1000. the program will exit after sleeping for 1000 seconds
 num_of_smpls_per_row = 25 # the number of samples in a row. It is needed if the nearest-neighbor distance module is on.
 
 
