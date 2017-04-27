@@ -8,23 +8,22 @@ Created on Mon Jun 13
 
 import os.path
 import time
-import imp
 import numpy as np
 import random
 import sys
-
 # import modules
-reduction = imp.load_source("data_reduction", "data_reduction_smooth.py")
-Qchi = imp.load_source("save_Qchi", "save_Qchi.py")
-oneDplot = imp.load_source("save_1Dplot", "save_1Dplot.py")
-oneDcsv = imp.load_source("save_1Dcsv", "save_1Dcsv.py")
-max_ave = imp.load_source("extract_max_ave_intensity", "extract_max_ave_intensity.py")
-peak_num = imp.load_source("extract_peak_num", "extract_peak_number.py")
-add_feature = imp.load_source("add_feature_to_master", "add_feature_to_master.py")
-save_texture = imp.load_source("save_texture_plot_csv", "save_texture_plot_csv.py")
-extract_texture = imp.load_source("extract_texture_extent", "extract_texture_extent.py")
-neighbor = imp.load_source("nearest_neighbor_distance", "nearest_neighbor_cosine_distances.py")
-SNR = imp.load_source("extract_SNR", "extract_signal_to_noise_ratio.py")
+from image_loader import load_image
+from data_reduction_smooth import data_reduction
+from save_Qchi import save_Qchi
+from save_1Dplot import save_1Dplot
+from save_1Dcsv import save_1Dcsv
+from extract_max_ave_intensity import extract_max_ave_intensity
+from extract_peak_number import extract_peak_num
+from add_feature_to_master import add_feature_to_master
+from save_texture_plot_csv import save_texture_plot_csv
+from extract_texture_extent import extract_texture_extent
+from nearest_neighbor_cosine_distances import nearst_neighbor_distance
+from extract_signal_to_noise_ratio import extract_SNR
 
 def file_index(index):
     """
@@ -81,53 +80,56 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
         print("\r")
         while (1):
             try:
+                # import image and convert it into an array
+                imArray = load_image(imageFullname)
+
                 # data_reduction to generate Q-chi and 1D spectra, Q
-                Q, chi, cake, Qlist, IntAve = reduction.data_reduction(imageFullname, \
-                                                                       d_in_pixel, Rot, tilt, lamda, x0, y0, PP)
+                Q, chi, cake, Qlist, IntAve = data_reduction(imArray, d_in_pixel, Rot, tilt, lamda, x0, y0, PP)
+
                 # save Qchi as a plot *.png and *.mat
-                Qchi.save_Qchi(Q, chi, cake, imageFilename, save_path)
+                save_Qchi(Q, chi, cake, imageFilename, save_path)
                 # save 1D spectra as a *.csv
-                oneDcsv.save_1Dcsv(Qlist, IntAve, imageFilename, save_path)
+                save_1Dcsv(Qlist, IntAve, imageFilename, save_path)
                 # extract composition information if the information is available
                 # extract the number of peaks in 1D spectra as attribute3 by default
-                newRow3, peaks = peak_num.extract_peak_num(Qlist, IntAve, index)
+                newRow3, peaks = extract_peak_num(Qlist, IntAve, index)
                 attribute3.append(newRow3)
                 attributes = np.array(attribute3)
 
                 # save 1D plot with detected peaks shown in the plot
-                oneDplot.save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path)
+                save_1Dplot(Qlist, IntAve, peaks, imageFilename, save_path)
 
                 if extract_Imax_Iave_ratio_module == 'on':
                     # extract maximum/average intensity from 1D spectra as attribute1
-                    newRow1 = max_ave.extract_max_ave_intensity(IntAve, index)
+                    newRow1 = extract_max_ave_intensity(IntAve, index)
                     attribute1.append(newRow1)
                     attributes = np.concatenate((attribute1, attributes), axis=1)
 
                 if extract_texture_module == 'on':
                     # save 1D texture spectra as a plot (*.png) and *.csv
-                    Qlist_texture, texture = save_texture.save_texture_plot_csv(Q, chi, cake, imageFilename, save_path)
+                    Qlist_texture, texture = save_texture_plot_csv(Q, chi, cake, imageFilename, save_path)
                     # extract texture square sum from the 1D texture spectra as attribute2
-                    newRow2 = extract_texture.extract_texture_extent(Qlist_texture, texture, index)
+                    newRow2 = extract_texture_extent(Qlist_texture, texture, index)
                     attribute2.append(newRow2)
                     attributes = np.concatenate((attribute2, attributes), axis=1)
 
                 if extract_neighbor_distance_module == 'on':
                     # extract neighbor distances as attribute4
-                    newRow4 = neighbor.nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename,
+                    newRow4 = nearst_neighbor_distance(index, Qlist, IntAve, folder_path, save_path, base_filename,
                                                                 num_of_smpls_per_row)
                     attribute4.append(newRow4)
                     attributes = np.concatenate((attribute4, attributes), axis=1)
 
                 if extract_signal_to_noise_module == 'on':
                     # extract signal-to-noise ratio
-                    newRow5 = SNR.extract_SNR(index, IntAve)
+                    newRow5 = extract_SNR(index, IntAve)
                     attribute5.append(newRow5)
                     attributes = np.concatenate((attribute5, attributes), axis=1)
 
                 if add_feature_to_csv_module == 'on':
                     # add features (floats) to master metadata
                     # print attributes.shape
-                    add_feature.add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
+                    add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
 
                 break
             except (OSError, IOError):

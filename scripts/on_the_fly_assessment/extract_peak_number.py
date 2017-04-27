@@ -5,7 +5,7 @@ Created on Wed Aug 03 15:00:51 2016
 @author: Ron Pandolfi (LBL), fangren
 """
 
-from scipy.signal import find_peaks_cwt, general_gaussian, fftconvolve
+from scipy.signal import find_peaks_cwt
 import numpy as np
 
 
