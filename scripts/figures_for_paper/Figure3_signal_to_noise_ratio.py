@@ -100,7 +100,7 @@ ax1.plot(Qlist4, IntAve_sum-500, 'm', label = 'Spectrum 5')
 plt.ylabel('Intensity')
 plt.xlim(1.7, 3.7)
 plt.ylim(200, 3100)
-ax1.annotate('(a)', xy=get_axis_limits(ax1))
+ax1.annotate('(a)', xy=(1.75,2700))
 # print '(a) is at ', get_axis_limits(ax1)
 plt.legend(fontsize = 12, loc='upper center', bbox_to_anchor=(0.5, 1.25), ncol=3)
 
@@ -138,30 +138,19 @@ bins = np.arange(-100, 100, 0.5)
 
 # the histogram of the noise
 
-ax4 = plt.subplot2grid((5,2), (4,1))
-n_sum, bins_sum = np.histogram(noise_sum, bins= bins)
-# n1[200] = (n1[199]+n1[201])/2
-ax4.bar(bins_sum[:-1], n_sum, color = 'm', edgecolor = 'none', label = '10x exposure time')
-plt.xlim(-110, 110)
-popt_sum, pcov_sum = curve_fit(func, bins_sum[:-1], n_sum, p0=guess, bounds = (low, high))
-fit_sum = func(bins_sum[:-1], *popt_sum)
-ax4.plot(bins_sum[:-1], fit_sum, 'k--', linewidth=2)
-# plt.legend(fontsize = 12)
-plt.ylabel('Counts')
-plt.xlabel('noise')
-ax4.annotate('(c$_5$)', xy=get_axis_limits(ax4))
+
 
 ax5 = plt.subplot2grid((5, 2), (0,1))
 n1, bins1 = np.histogram(noise1, bins= bins)
 # n1[200] = (n1[199]+n1[201])/2
-ax5.bar(bins1[:-1], n1, color = 'blue', edgecolor = 'none', label = 'good data 1')
+ax5.bar(bins1[:-1], n1, color = 'blue', edgecolor = 'none', label = 'Spectrum 1')
 plt.yscale('log')
 plt.xlim(-50, 50)
 plt.ylim(0, 200)
 popt1, pcov1 = curve_fit(func, bins1[:-1], n1, p0=guess, bounds = (low, high))
 fit1 = func(bins1[:-1], *popt1)
 ax5.plot(bins1[:-1], fit1, 'k--', linewidth=2)
-# plt.legend(fontsize = 12)
+plt.legend(fontsize = 12)
 plt.ylabel('Counts (log scale)')
 ax5.annotate('(c$_1$)', xy=(get_axis_limits(ax5)[0], 90))
 
@@ -169,14 +158,14 @@ ax5.annotate('(c$_1$)', xy=(get_axis_limits(ax5)[0], 90))
 ax6 = plt.subplot2grid((5, 2), (1,1))
 n2, bins2 = np.histogram(noise2, bins= bins)
 # n2[200] = (n2[199]+n2[201])/2
-ax6.bar(bins2[:-1], n2, color = 'g', edgecolor = 'none', label = 'good data 2')
+ax6.bar(bins2[:-1], n2, color = 'g', edgecolor = 'none', label = 'Spectrum 2')
 plt.yscale('log')
 plt.xlim(-50, 50)
 plt.ylim(0, 200)
 popt2, pcov2 = curve_fit(func, bins2[:-1], n2, p0=guess, bounds = (low, high))
 fit2 = func(bins2[:-1], *popt2)
 ax6.plot(bins2[:-1], fit2, 'k--', linewidth=2)
-# plt.legend(fontsize = 12)
+plt.legend(fontsize = 12)
 plt.ylabel('Counts(log scale)')
 ax6.annotate('(c$_2$)', xy=(get_axis_limits(ax6)[0], 90))
 
@@ -184,13 +173,13 @@ ax7 = plt.subplot2grid((5, 2), (2,1))
 n3, bins3 = np.histogram(noise3, bins= bins)
 # n3[200] = (n3[199]+n3[201])/2
 n3 = medfilt(n3, kernel_size = 3)
-ax7.bar(bins3[:-1], n3, color = 'red', edgecolor = 'none', label = 'good data 3')
+ax7.bar(bins3[:-1], n3, color = 'red', edgecolor = 'none', label = 'Spectrum 3')
 plt.xlim(-50, 50)
 # plt.ylim(0, 10)
 popt3, pcov3 = curve_fit(func, bins3[:-1], n3, p0=guess, bounds = (low, high))
 fit3 = func(bins3[:-1], *popt3)
 ax7.plot(bins3[:-1], fit3, 'k--', linewidth=2)
-# plt.legend(fontsize = 12)
+plt.legend(fontsize = 12)
 plt.ylabel('Counts')
 ax7.annotate('(c$_3$)', xy=get_axis_limits(ax7))
 
@@ -198,15 +187,28 @@ ax7.annotate('(c$_3$)', xy=get_axis_limits(ax7))
 ax8 = plt.subplot2grid((5, 2), (3,1))
 n4, bins4 = np.histogram(noise4, bins= bins)
 # n4[200] = (n4[199]+n4[201])/2
-ax8.bar(bins4[:-1], n4, color = 'cyan', edgecolor = 'none', label = 'noisy data')
+ax8.bar(bins4[:-1], n4, color = 'cyan', edgecolor = 'none', label = 'Spectrum 4')
 plt.xlim(-110, 110)
 # plt.ylim(0, 10)
 popt4, pcov4 = curve_fit(func, bins4[:-1], n4, p0=guess, bounds = (low, high))
 fit4 = func(bins4[:-1], *popt4)
 ax8.plot(bins4[:-1], fit4, 'k--', linewidth=2)
-# plt.legend(fontsize = 12)
+plt.legend(fontsize = 12, loc = 1)
 plt.ylabel('Counts')
 ax8.annotate('(c$_4$)', xy=get_axis_limits(ax8))
+
+ax4 = plt.subplot2grid((5,2), (4,1))
+n_sum, bins_sum = np.histogram(noise_sum, bins= bins)
+# n1[200] = (n1[199]+n1[201])/2
+ax4.bar(bins_sum[:-1], n_sum, color = 'm', edgecolor = 'none', label = 'Spectrum 5')
+plt.xlim(-110, 110)
+popt_sum, pcov_sum = curve_fit(func, bins_sum[:-1], n_sum, p0=guess, bounds = (low, high))
+fit_sum = func(bins_sum[:-1], *popt_sum)
+ax4.plot(bins_sum[:-1], fit_sum, 'k--', linewidth=2)
+plt.legend(fontsize = 12)
+plt.ylabel('Counts')
+plt.xlabel('noise')
+ax4.annotate('(c$_5$)', xy=get_axis_limits(ax4))
 
 print popt1[2], popt2[2], popt3[2], popt4[2], popt_sum[2]
 print popt1[1], popt2[1], popt3[1], popt4[1], popt_sum[1]
@@ -258,11 +260,11 @@ print 'regression', slope, intercept, r_value, p_value, std_err
 fit = slope *x + intercept
 ax9.plot(x, fit, 'k--', label = 'fit')
 
-ax9.plot(x[0], y[0], 'o', color = 'b')
-ax9.plot(x[1], y[1], 'o', color = 'g')
-ax9.plot(x[2], y[2], 'o', color = 'r')
-ax9.plot(x[3], y[3], 'o', color = 'c')
-ax9.plot(x[4], y[4], 'o', color = 'm')
+ax9.plot(x[0], y[0], 'o', color = 'b', label = '1')
+ax9.plot(x[1], y[1], 'o', color = 'g', label = '2')
+ax9.plot(x[2], y[2], 'o', color = 'r', label = '3')
+ax9.plot(x[3], y[3], 'o', color = 'c', label = '4')
+ax9.plot(x[4], y[4], 'o', color = 'm', label = '5')
 ax9.plot(np.log(1/popt2[2]), SNR2, 's', color = 'g')
 
 
