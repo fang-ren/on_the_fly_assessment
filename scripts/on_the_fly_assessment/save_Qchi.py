@@ -24,7 +24,6 @@ def save_Qchi(Q, chi, cake, imageFilename, save_path):
     #plt.ylim((-56, 56))
     plt.clim((0, np.log(np.nanmax(cake))))
     # the next two lines contributed by S. Suram (JCAP)
-
     inds = np.nonzero(cake)
     plt.clim(scipy.stats.scoreatpercentile(np.log(cake[inds]), 5),
              scipy.stats.scoreatpercentile(np.log(cake[inds]), 95))

@@ -120,7 +120,6 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                     attribute4.append(newRow4)
                     attributes = np.concatenate((attribute4, attributes), axis=1)
 
-
                 if extract_signal_to_noise_module == 'on':
                     # extract signal-to-noise ratio
                     newRow5 = extract_SNR(index, IntAve)
