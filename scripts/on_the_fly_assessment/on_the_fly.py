@@ -132,7 +132,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                     add_feature_to_master(attributes, base_filename, folder_path, save_path, master_index, index)
 
                 break
-            except (OSError, IOError):
+            except (OSError, IOError, IndexError):
                 # The image was being created but not complete yet
                 print 'waiting for image', imageFullname + ' to be ready...'
                 time.sleep(1)

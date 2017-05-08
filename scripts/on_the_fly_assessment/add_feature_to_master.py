@@ -8,13 +8,17 @@ Created on Thu Apr 21 14:48:10 2016
 import numpy as np
 import os.path
 import csv
+import os
 
 def add_feature_to_master(features, base_filename, folder_path, save_path, master_index, index):
     """
     add a feature 'feature' to master meta data, feature is in the form of a ziped row
     """
 
-    master_filename = os.path.join(folder_path, base_filename + 'scan1.csv')
+    # master_filename = os.path.join(folder_path, base_filename + 'scan1.csv')
+    for file in os.listdir(folder_path):
+        if file.endswith(".csv"):
+            master_filename = file
     # print master_filename
 
     if  os.path.exists(master_filename):
