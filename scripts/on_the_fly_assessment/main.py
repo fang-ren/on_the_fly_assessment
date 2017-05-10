@@ -8,14 +8,13 @@ run = imp.load_source("on_the_fly", "on_the_fly.py")
 
 # input calibration parameters (make sure the correct calibration is entered)
 # the current geometry is consistant with WxDiff software's tilt/rotation geometry
-d_in_pixel = 2309.54007395     # distance from sample to detector plane along beam direction in pixel space
-Rotation_angle = 4.72973064797  #detector rotation
-tilt_angle = 0.531406930485   # detector tilt
+bcenter_x = 1034.81496248     # beam center in pixel-space
+bcenter_y = 2309.54007395    # beam center in pixel-space
+detect_dist = 2309.54007395     # distance from sample to detector plane along beam direction in pixel space
+detect_tilt_alpha = 4.72973064797  #detector rotation
+detect_tilt_delta = 0.531406930485   # detector tilt
 lamda = 0.9762  # x-ray wavelength
-x0 = 1034.81496248     # beam center in pixel-space
-y0 = 2309.54007395    # beam center in pixel-space
 PP = 0.95   # beam polarization, according to beamline setup. Contact beamline scientist for this number
-
 
 # folder and file info
 folder_path = 'sample_data\\'  # specify a folder for the software to watch
@@ -36,6 +35,6 @@ add_feature_to_csv_module = 'on'  # if there is a master file, the feature will 
 
 
 # DO NOT CHANGE ANYTHING FROM HERE
-run.on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda, x0, y0, PP,
+run.on_the_fly(folder_path, base_filename, index, last_scan, detect_dist, detect_tilt_alpha, detect_tilt_delta, lamda, bcenter_x, bcenter_y, PP,
                num_of_smpls_per_row, extract_Imax_Iave_ratio_module, extract_texture_module, extract_signal_to_noise_module,
                extract_neighbor_distance_module, add_feature_to_csv_module)
