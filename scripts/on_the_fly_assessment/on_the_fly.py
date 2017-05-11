@@ -12,6 +12,7 @@ import numpy as np
 import random
 import sys
 # import modules
+from parsing_calib import parse_calib
 from image_loader import load_image
 from data_reduction_smooth import data_reduction
 from save_Qchi import save_Qchi
@@ -40,8 +41,7 @@ def file_index(index):
         return str(index)
 
 
-def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotation_angle, tilt_angle, lamda,
-               x0, y0, PP, num_of_smpls_per_row, extract_Imax_Iave_ratio_module, extract_texture_module,
+def on_the_fly(folder_path, base_filename, index, last_scan, calibration_file, PP, pixelSize, num_of_smpls_per_row, extract_Imax_Iave_ratio_module, extract_texture_module,
                extract_signal_to_noise_module, extract_neighbor_distance_module, add_feature_to_csv_module,
                attribute1=[['scan#', 'Imax', 'Iave', 'Imax/Iave']],
                attribute2=[['scan#', 'texture_sum']],
@@ -51,17 +51,20 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
     """
     run when starting to collect XRD images, and finish when finishing measuring the whole library
     """
-    # initializing parameters  # distance from sample to detector plane along beam direction in pixel space
-    Rot = (np.pi * 2 - Rotation_angle) / (2 * np.pi) * 360  # detector rotation
-    tilt = tilt_angle / (2 * np.pi) * 360  # detector tilt  # wavelength
-
     # generate a folder to put processed files
     save_path = os.path.join(folder_path, 'Processed')
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
+    # initializing parameters, transform the calibration parameters from WxDiff to Fit2D
+    d_in_pixel, Rotation_angle, tilt_angle, lamda, x0, y0 = parse_calib(calibration_file)
+    Rot = (np.pi * 2 - Rotation_angle) / (2 * np.pi) * 360  # detector rotation
+    tilt = tilt_angle / (2 * np.pi) * 360  # detector tilt  # wavelength
+    d = d_in_pixel * pixelSize * 0.001  # measured in milimeters
+
     # generate a random series of numbers, in case restart the measurement from the middle, the new master file will not overwrite the previous one
     master_index = str(int(random.random() * 100000000))
+
     while (index <= last_scan):
         imageFilename = base_filename + file_index(index) + '.tif'
         imageFullname = os.path.join(folder_path, imageFilename)
@@ -84,7 +87,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, d_in_pixel, Rotatio
                 imArray = load_image(imageFullname)
 
                 # data_reduction to generate Q-chi and 1D spectra, Q
-                Q, chi, cake, Qlist, IntAve = data_reduction(imArray, d_in_pixel, Rot, tilt, lamda, x0, y0, PP)
+                Q, chi, cake, Qlist, IntAve = data_reduction(imArray, d, Rot, tilt, lamda, x0, y0, PP, pixelSize)
 
                 # save Qchi as a plot *.png and *.mat
                 save_Qchi(Q, chi, cake, imageFilename, save_path)
