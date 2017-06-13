@@ -6,9 +6,8 @@ author: Fang Ren (SSRL)
 
 import numpy as np
 
-
 def load_image(imageFullname):
-    # open MARCCD tiff image
+    # open Pilatus file
     data = np.fromfile(imageFullname, dtype=np.int32)
     imArray = data.reshape(195, 1475)
     return imArray
