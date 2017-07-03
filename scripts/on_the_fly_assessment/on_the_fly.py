@@ -66,7 +66,7 @@ def on_the_fly(folder_path, base_filename, index, last_scan, calibration_file, P
     master_index = str(int(random.random() * 100000000))
 
     while (index <= last_scan):
-        imageFilename = base_filename + file_index(index) + '.tif'
+        imageFilename = base_filename + file_index(index) + '.raw'
         imageFullname = os.path.join(folder_path, imageFilename)
         print("\r")
         # wait until an image is created, and process the previous image, to avoid crashing
